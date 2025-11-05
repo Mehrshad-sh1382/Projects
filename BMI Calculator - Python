@@ -1,0 +1,335 @@
+import datetime
+
+
+class BMICalculator:
+    """A comprehensive BMI calculator with health information."""
+
+    def __init__(self):
+        """Initialize BMI categories and health information."""
+        self.categories = {
+            'underweight': {'range': (0, 18.5), 'color': '🔵', 'level': 'Underweight'},
+            'normal': {'range': (18.5, 24.9), 'color': '🟢', 'level': 'Normal Weight'},
+            'overweight': {'range': (25, 29.9), 'color': '🟡', 'level': 'Overweight'},
+            'obese_1': {'range': (30, 34.9), 'color': '🟠', 'level': 'Obese Class I'},
+            'obese_2': {'range': (35, 39.9), 'color': '🟠', 'level': 'Obese Class II'},
+            'obese_3': {'range': (40, float('inf')), 'color': '🔴', 'level': 'Obese Class III'}
+        }
+
+    def calculate_bmi(self, weight, height, unit='metric'):
+        """
+        Calculate BMI based on weight and height.
+
+        Args:
+            weight (float): Weight in kg (metric) or lbs (imperial)
+            height (float): Height in cm (metric) or inches (imperial)
+            unit (str): 'metric' or 'imperial'
+
+        Returns:
+            float: Calculated BMI
+        """
+        if weight <= 0 or height <= 0:
+            raise ValueError("Weight and height must be positive numbers")
+
+        if unit == 'metric':
+            # BMI = weight(kg) / (height(m))^2
+            height_m = height / 100  # Convert cm to meters
+            bmi = weight / (height_m ** 2)
+        elif unit == 'imperial':
+            # BMI = (weight(lbs) / (height(inches))^2) * 703
+            bmi = (weight / (height ** 2)) * 703
+        else:
+            raise ValueError("Unit must be 'metric' or 'imperial'")
+
+        return round(bmi, 2)
+
+    def get_category(self, bmi):
+        """
+        Determine BMI category.
+
+        Args:
+            bmi (float): BMI value
+
+        Returns:
+            dict: Category information
+        """
+        for category, info in self.categories.items():
+            if info['range'][0] <= bmi < info['range'][1]:
+                return {
+                    'category': category,
+                    'level': info['level'],
+                    'color': info['color']
+                }
+
+        return None
+
+    def get_health_info(self, category):
+        """
+        Get health information based on BMI category.
+
+        Args:
+            category (str): BMI category
+
+        Returns:
+            dict: Health risks and recommendations
+        """
+        health_info = {
+            'underweight': {
+                'risks': [
+                    'Weakened immune system',
+                    'Osteoporosis and bone fractures',
+                    'Malnutrition and nutrient deficiencies',
+                    'Fertility issues',
+                    'Anemia'
+                ],
+                'recommendations': [
+                    'Consult a healthcare provider or nutritionist',
+                    'Increase caloric intake with nutrient-dense foods',
+                    'Eat more frequent, smaller meals',
+                    'Include healthy fats, proteins, and carbohydrates',
+                    'Consider strength training to build muscle mass'
+                ]
+            },
+            'normal': {
+                'risks': [
+                    'Your BMI is in the healthy range!',
+                    'Continue maintaining your current lifestyle'
+                ],
+                'recommendations': [
+                    'Maintain a balanced diet with fruits and vegetables',
+                    'Stay physically active (150 mins moderate exercise/week)',
+                    'Get adequate sleep (7-9 hours per night)',
+                    'Stay hydrated',
+                    'Regular health check-ups'
+                ]
+            },
+            'overweight': {
+                'risks': [
+                    'Increased risk of type 2 diabetes',
+                    'High blood pressure',
+                    'Heart disease',
+                    'Sleep apnea',
+                    'Joint problems'
+                ],
+                'recommendations': [
+                    'Consult healthcare provider for personalized plan',
+                    'Aim for gradual weight loss (0.5-1 kg per week)',
+                    'Reduce portion sizes and caloric intake',
+                    'Increase physical activity to 300 mins/week',
+                    'Limit processed foods and sugary drinks',
+                    'Focus on whole foods and vegetables'
+                ]
+            },
+            'obese_1': {
+                'risks': [
+                    'High risk of type 2 diabetes',
+                    'Cardiovascular disease',
+                    'High cholesterol',
+                    'Stroke',
+                    'Certain cancers',
+                    'Fatty liver disease'
+                ],
+                'recommendations': [
+                    'Consult healthcare provider immediately',
+                    'Consider medical weight loss program',
+                    'Set realistic weight loss goals (5-10% initial)',
+                    'Regular physical activity with medical clearance',
+                    'Work with dietitian for meal planning',
+                    'Monitor blood pressure and blood sugar'
+                ]
+            },
+            'obese_2': {
+                'risks': [
+                    'Very high risk of serious health conditions',
+                    'Severe type 2 diabetes complications',
+                    'Heart failure',
+                    'Severe sleep apnea',
+                    'Mobility issues',
+                    'Reduced quality of life'
+                ],
+                'recommendations': [
+                    'Seek immediate medical consultation',
+                    'Consider comprehensive weight management program',
+                    'Discuss medication options with doctor',
+                    'Evaluate bariatric surgery eligibility',
+                    'Start with low-impact exercises',
+                    'Regular monitoring of vital signs'
+                ]
+            },
+            'obese_3': {
+                'risks': [
+                    'Extremely high risk of life-threatening conditions',
+                    'Severe cardiovascular complications',
+                    'Respiratory failure',
+                    'Multiple organ dysfunction',
+                    'Significantly reduced life expectancy'
+                ],
+                'recommendations': [
+                    'URGENT: Consult healthcare provider immediately',
+                    'Consider bariatric surgery consultation',
+                    'Comprehensive medical weight management',
+                    'May need supervised medical program',
+                    'Address any existing health complications',
+                    'Psychological support and counseling'
+                ]
+            }
+        }
+
+        return health_info.get(category, health_info['normal'])
+
+    def calculate_ideal_weight(self, height, unit='metric'):
+        """
+        Calculate ideal weight range based on height.
+
+        Args:
+            height (float): Height in cm (metric) or inches (imperial)
+            unit (str): 'metric' or 'imperial'
+
+        Returns:
+            tuple: (min_weight, max_weight)
+        """
+        if unit == 'metric':
+            height_m = height / 100
+            min_weight = 18.5 * (height_m ** 2)
+            max_weight = 24.9 * (height_m ** 2)
+        else:
+            min_weight = (18.5 * (height ** 2)) / 703
+            max_weight = (24.9 * (height ** 2)) / 703
+
+        return (round(min_weight, 1), round(max_weight, 1))
+
+
+def get_float_input(prompt):
+    """Get and validate float input."""
+    while True:
+        try:
+            value = float(input(prompt))
+            if value <= 0:
+                print("❌ Value must be positive!")
+                continue
+            return value
+        except ValueError:
+            print("❌ Invalid input! Please enter a number.")
+
+
+def get_unit_choice():
+    """Get user's preferred unit system."""
+    while True:
+        print("\nSelect unit system:")
+        print("1. Metric (kg, cm)")
+        print("2. Imperial (lbs, inches)")
+        choice = input("Enter choice (1 or 2): ").strip()
+
+        if choice == '1':
+            return 'metric'
+        elif choice == '2':
+            return 'imperial'
+        else:
+            print("❌ Invalid choice! Please enter 1 or 2.")
+
+
+def display_bmi_chart():
+    """Display BMI categories chart."""
+    print("\n" + "=" * 60)
+    print("                    BMI CATEGORIES")
+    print("=" * 60)
+    print("🔵 Underweight:        BMI < 18.5")
+    print("🟢 Normal Weight:      BMI 18.5 - 24.9")
+    print("🟡 Overweight:         BMI 25.0 - 29.9")
+    print("🟠 Obese Class I:      BMI 30.0 - 34.9")
+    print("🟠 Obese Class II:     BMI 35.0 - 39.9")
+    print("🔴 Obese Class III:    BMI ≥ 40.0")
+    print("=" * 60)
+
+
+def main():
+    """Main function to run BMI calculator."""
+    calculator = BMICalculator()
+
+    print("\n" + "=" * 60)
+    print("           COMPREHENSIVE BMI CALCULATOR")
+    print("=" * 60)
+    print("\nWelcome! This tool will calculate your Body Mass Index (BMI)")
+    print("and provide personalized health information.")
+
+    while True:
+        # Get unit system
+        unit = get_unit_choice()
+
+        # Get user information
+        print("\n" + "-" * 60)
+        print("Enter your information:")
+
+        if unit == 'metric':
+            weight = get_float_input("Weight (kg): ")
+            height = get_float_input("Height (cm): ")
+            weight_unit = "kg"
+            height_unit = "cm"
+        else:
+            weight = get_float_input("Weight (lbs): ")
+            height = get_float_input("Height (inches): ")
+            weight_unit = "lbs"
+            height_unit = "inches"
+
+        # Optional: Get age and gender for additional context
+        try:
+            age = int(input("Age (optional, press Enter to skip): ") or "0")
+        except ValueError:
+            age = 0
+
+        # Calculate BMI
+        try:
+            bmi = calculator.calculate_bmi(weight, height, unit)
+            category_info = calculator.get_category(bmi)
+            health_info = calculator.get_health_info(category_info['category'])
+            ideal_weight = calculator.calculate_ideal_weight(height, unit)
+
+            # Display results
+            print("\n" + "=" * 60)
+            print("                    YOUR RESULTS")
+            print("=" * 60)
+            print(f"Date: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}")
+            if age > 0:
+                print(f"Age: {age} years")
+            print(f"Weight: {weight} {weight_unit}")
+            print(f"Height: {height} {height_unit}")
+            print("-" * 60)
+            print(f"Your BMI: {bmi}")
+            print(f"Category: {category_info['color']} {category_info['level']}")
+            print(f"Ideal Weight Range: {ideal_weight[0]} - {ideal_weight[1]} {weight_unit}")
+
+            # Display health risks
+            print("\n" + "-" * 60)
+            print("⚠️  HEALTH RISKS:")
+            print("-" * 60)
+            for risk in health_info['risks']:
+                print(f"  • {risk}")
+
+            # Display recommendations
+            print("\n" + "-" * 60)
+            print("💡 RECOMMENDATIONS:")
+            print("-" * 60)
+            for rec in health_info['recommendations']:
+                print(f"  • {rec}")
+
+            # Display BMI chart
+            display_bmi_chart()
+
+            print("\n" + "=" * 60)
+            print("NOTE: BMI is a screening tool. Consult a healthcare")
+            print("provider for complete health assessment.")
+            print("=" * 60)
+
+        except ValueError as e:
+            print(f"\n❌ Error: {e}")
+
+        # Ask if user wants to calculate again
+        again = input("\nCalculate another BMI? (y/n): ").strip().lower()
+        if again != 'y':
+            print("\n👋 Thank you for using BMI Calculator!")
+            print("Stay healthy! 💪")
+            print("=" * 60)
+            break
+
+
+if __name__ == "__main__":
+    main()
