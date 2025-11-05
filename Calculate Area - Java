@@ -1,0 +1,188 @@
+import java.util.Scanner;
+
+class ShapeCalculator {
+
+    public static double circle(double radius) {
+        if (radius < 0) throw new IllegalArgumentException("Radius cannot be negative");
+        return Math.PI * radius * radius;
+    }
+
+    public static double square(double side) {
+        if (side < 0) throw new IllegalArgumentException("Side length cannot be negative");
+        return side * side;
+    }
+
+    public static double rectangle(double length, double width) {
+        if (length < 0 || width < 0) throw new IllegalArgumentException("Dimensions cannot be negative");
+        return length * width;
+    }
+
+    public static double triangle(double base, double height) {
+        if (base < 0 || height < 0) throw new IllegalArgumentException("Dimensions cannot be negative");
+        return 0.5 * base * height;
+    }
+
+    public static double triangleHeron(double a, double b, double c) {
+        if (a < 0 || b < 0 || c < 0)
+            throw new IllegalArgumentException("Side lengths cannot be negative");
+        if (a + b <= c || a + c <= b || b + c <= a)
+            throw new IllegalArgumentException("Invalid triangle: sides don't satisfy triangle inequality");
+        double s = (a + b + c) / 2;
+        return Math.sqrt(s * (s - a) * (s - b) * (s - c));
+    }
+
+    public static double trapezoid(double base1, double base2, double height) {
+        if (base1 < 0 || base2 < 0 || height < 0)
+            throw new IllegalArgumentException("Dimensions cannot be negative");
+        return 0.5 * (base1 + base2) * height;
+    }
+
+    public static double parallelogram(double base, double height) {
+        if (base < 0 || height < 0)
+            throw new IllegalArgumentException("Dimensions cannot be negative");
+        return base * height;
+    }
+
+    public static double ellipse(double major, double minor) {
+        if (major < 0 || minor < 0) throw new IllegalArgumentException("Axes cannot be negative");
+        return Math.PI * major * minor;
+    }
+
+    public static double rhombus(double d1, double d2) {
+        if (d1 < 0 || d2 < 0) throw new IllegalArgumentException("Diagonals cannot be negative");
+        return 0.5 * d1 * d2;
+    }
+
+    public static double regularPolygon(int sides, double length) {
+        if (sides < 3) throw new IllegalArgumentException("A polygon must have at least 3 sides");
+        if (length < 0) throw new IllegalArgumentException("Side length cannot be negative");
+        return (sides * length * length) / (4 * Math.tan(Math.PI / sides));
+    }
+}
+
+public class ShapeAreaCalculator {
+
+    private static Scanner scanner = new Scanner(System.in);
+
+    private static void displayMenu() {
+        System.out.println("\n==================================================");
+        System.out.println("          SHAPE AREA CALCULATOR");
+        System.out.println("==================================================");
+        System.out.println("1.  Circle");
+        System.out.println("2.  Square");
+        System.out.println("3.  Rectangle");
+        System.out.println("4.  Triangle (Base & Height)");
+        System.out.println("5.  Triangle (Three Sides - Heron's Formula)");
+        System.out.println("6.  Trapezoid");
+        System.out.println("7.  Parallelogram");
+        System.out.println("8.  Ellipse");
+        System.out.println("9.  Rhombus");
+        System.out.println("10. Regular Polygon");
+        System.out.println("0.  Exit");
+        System.out.println("--------------------------------------------------");
+    }
+
+    private static double getDoubleInput(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Invalid input! Please enter a number.");
+            }
+        }
+    }
+
+    private static int getIntInput(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Invalid input! Please enter an integer.");
+            }
+        }
+    }
+
+    private static void displayArea(String shapeName, double area) {
+        System.out.println("--------------------------------------------------");
+        System.out.printf("✅ Area of %s: %.4f square units%n", shapeName, area);
+        System.out.println("--------------------------------------------------");
+    }
+
+    public static void main(String[] args) {
+        while (true) {
+            displayMenu();
+            System.out.print("Enter your choice (0-10): ");
+            String choice = scanner.nextLine().trim();
+
+            try {
+                switch (choice) {
+                    case "0":
+                        System.out.println("👋 Thank you for using Shape Area Calculator!");
+                        return;
+                    case "1":
+                        double radius = getDoubleInput("Enter radius: ");
+                        displayArea("Circle", ShapeCalculator.circle(radius));
+                        break;
+                    case "2":
+                        double side = getDoubleInput("Enter side length: ");
+                        displayArea("Square", ShapeCalculator.square(side));
+                        break;
+                    case "3":
+                        double length = getDoubleInput("Enter length: ");
+                        double width = getDoubleInput("Enter width: ");
+                        displayArea("Rectangle", ShapeCalculator.rectangle(length, width));
+                        break;
+                    case "4":
+                        double base = getDoubleInput("Enter base: ");
+                        double height = getDoubleInput("Enter height: ");
+                        displayArea("Triangle", ShapeCalculator.triangle(base, height));
+                        break;
+                    case "5":
+                        double a = getDoubleInput("Enter side A: ");
+                        double b = getDoubleInput("Enter side B: ");
+                        double c = getDoubleInput("Enter side C: ");
+                        displayArea("Triangle", ShapeCalculator.triangleHeron(a, b, c));
+                        break;
+                    case "6":
+                        double base1 = getDoubleInput("Enter first base: ");
+                        double base2 = getDoubleInput("Enter second base: ");
+                        double trapHeight = getDoubleInput("Enter height: ");
+                        displayArea("Trapezoid", ShapeCalculator.trapezoid(base1, base2, trapHeight));
+                        break;
+                    case "7":
+                        double paraBase = getDoubleInput("Enter base: ");
+                        double paraHeight = getDoubleInput("Enter height: ");
+                        displayArea("Parallelogram", ShapeCalculator.parallelogram(paraBase, paraHeight));
+                        break;
+                    case "8":
+                        double major = getDoubleInput("Enter semi-major axis: ");
+                        double minor = getDoubleInput("Enter semi-minor axis: ");
+                        displayArea("Ellipse", ShapeCalculator.ellipse(major, minor));
+                        break;
+                    case "9":
+                        double d1 = getDoubleInput("Enter first diagonal: ");
+                        double d2 = getDoubleInput("Enter second diagonal: ");
+                        displayArea("Rhombus", ShapeCalculator.rhombus(d1, d2));
+                        break;
+                    case "10":
+                        int sides = getIntInput("Enter number of sides: ");
+                        double lengthSide = getDoubleInput("Enter side length: ");
+                        displayArea("Regular Polygon", ShapeCalculator.regularPolygon(sides, lengthSide));
+                        break;
+                    default:
+                        System.out.println("❌ Invalid choice! Please select a number from 0-10.");
+                        break;
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("❌ An unexpected error occurred: " + e.getMessage());
+            }
+
+            System.out.println("\nPress Enter to continue...");
+            scanner.nextLine();
+        }
+    }
+}
