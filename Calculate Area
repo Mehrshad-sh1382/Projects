@@ -1,0 +1,332 @@
+import math
+
+
+class ShapeCalculator:
+    """A class to calculate areas of various geometric shapes."""
+
+    @staticmethod
+    def circle(radius):
+        """
+        Calculate the area of a circle.
+
+        Args:
+            radius (float): Radius of the circle
+
+        Returns:
+            float: Area of the circle
+        """
+        if radius < 0:
+            raise ValueError("Radius cannot be negative")
+        return math.pi * radius ** 2
+
+    @staticmethod
+    def square(side):
+        """
+        Calculate the area of a square.
+
+        Args:
+            side (float): Side length of the square
+
+        Returns:
+            float: Area of the square
+        """
+        if side < 0:
+            raise ValueError("Side length cannot be negative")
+        return side ** 2
+
+    @staticmethod
+    def rectangle(length, width):
+        """
+        Calculate the area of a rectangle.
+
+        Args:
+            length (float): Length of the rectangle
+            width (float): Width of the rectangle
+
+        Returns:
+            float: Area of the rectangle
+        """
+        if length < 0 or width < 0:
+            raise ValueError("Dimensions cannot be negative")
+        return length * width
+
+    @staticmethod
+    def triangle(base, height):
+        """
+        Calculate the area of a triangle.
+
+        Args:
+            base (float): Base of the triangle
+            height (float): Height of the triangle
+
+        Returns:
+            float: Area of the triangle
+        """
+        if base < 0 or height < 0:
+            raise ValueError("Dimensions cannot be negative")
+        return 0.5 * base * height
+
+    @staticmethod
+    def triangle_heron(side_a, side_b, side_c):
+        """
+        Calculate the area of a triangle using Heron's formula.
+
+        Args:
+            side_a (float): First side of the triangle
+            side_b (float): Second side of the triangle
+            side_c (float): Third side of the triangle
+
+        Returns:
+            float: Area of the triangle
+        """
+        if side_a < 0 or side_b < 0 or side_c < 0:
+            raise ValueError("Side lengths cannot be negative")
+
+        # Check triangle inequality
+        if side_a + side_b <= side_c or side_a + side_c <= side_b or side_b + side_c <= side_a:
+            raise ValueError("Invalid triangle: sides don't satisfy triangle inequality")
+
+        s = (side_a + side_b + side_c) / 2
+        area = math.sqrt(s * (s - side_a) * (s - side_b) * (s - side_c))
+        return area
+
+    @staticmethod
+    def trapezoid(base1, base2, height):
+        """
+        Calculate the area of a trapezoid.
+
+        Args:
+            base1 (float): First base of the trapezoid
+            base2 (float): Second base of the trapezoid
+            height (float): Height of the trapezoid
+
+        Returns:
+            float: Area of the trapezoid
+        """
+        if base1 < 0 or base2 < 0 or height < 0:
+            raise ValueError("Dimensions cannot be negative")
+        return 0.5 * (base1 + base2) * height
+
+    @staticmethod
+    def parallelogram(base, height):
+        """
+        Calculate the area of a parallelogram.
+
+        Args:
+            base (float): Base of the parallelogram
+            height (float): Height of the parallelogram
+
+        Returns:
+            float: Area of the parallelogram
+        """
+        if base < 0 or height < 0:
+            raise ValueError("Dimensions cannot be negative")
+        return base * height
+
+    @staticmethod
+    def ellipse(major_axis, minor_axis):
+        """
+        Calculate the area of an ellipse.
+
+        Args:
+            major_axis (float): Semi-major axis of the ellipse
+            minor_axis (float): Semi-minor axis of the ellipse
+
+        Returns:
+            float: Area of the ellipse
+        """
+        if major_axis < 0 or minor_axis < 0:
+            raise ValueError("Axes cannot be negative")
+        return math.pi * major_axis * minor_axis
+
+    @staticmethod
+    def rhombus(diagonal1, diagonal2):
+        """
+        Calculate the area of a rhombus.
+
+        Args:
+            diagonal1 (float): First diagonal of the rhombus
+            diagonal2 (float): Second diagonal of the rhombus
+
+        Returns:
+            float: Area of the rhombus
+        """
+        if diagonal1 < 0 or diagonal2 < 0:
+            raise ValueError("Diagonals cannot be negative")
+        return 0.5 * diagonal1 * diagonal2
+
+    @staticmethod
+    def regular_polygon(sides, length):
+        """
+        Calculate the area of a regular polygon.
+
+        Args:
+            sides (int): Number of sides
+            length (float): Length of each side
+
+        Returns:
+            float: Area of the regular polygon
+        """
+        if sides < 3:
+            raise ValueError("A polygon must have at least 3 sides")
+        if length < 0:
+            raise ValueError("Side length cannot be negative")
+
+        area = (sides * length ** 2) / (4 * math.tan(math.pi / sides))
+        return area
+
+
+def display_menu():
+    """Display the shape selection menu."""
+    print("\n" + "=" * 50)
+    print("       SHAPE AREA CALCULATOR")
+    print("=" * 50)
+    print("\nAvailable Shapes:")
+    print("1.  Circle")
+    print("2.  Square")
+    print("3.  Rectangle")
+    print("4.  Triangle (Base & Height)")
+    print("5.  Triangle (Three Sides - Heron's Formula)")
+    print("6.  Trapezoid")
+    print("7.  Parallelogram")
+    print("8.  Ellipse")
+    print("9.  Rhombus")
+    print("10. Regular Polygon")
+    print("0.  Exit")
+    print("-" * 50)
+
+
+def get_float_input(prompt):
+    """Get and validate float input from user."""
+    while True:
+        try:
+            value = float(input(prompt))
+            return value
+        except ValueError:
+            print("❌ Invalid input! Please enter a number.")
+
+
+def get_int_input(prompt):
+    """Get and validate integer input from user."""
+    while True:
+        try:
+            value = int(input(prompt))
+            return value
+        except ValueError:
+            print("❌ Invalid input! Please enter an integer.")
+
+
+def calculate_and_display(shape_name, area):
+    """Display the calculated area."""
+    print("\n" + "-" * 50)
+    print(f"✅ Area of {shape_name}: {area:.4f} square units")
+    print("-" * 50)
+
+
+def main():
+    """Main function to run the shape area calculator."""
+    calculator = ShapeCalculator()
+
+    while True:
+        display_menu()
+        choice = input("\nEnter your choice (0-10): ").strip()
+
+        try:
+            if choice == '0':
+                print("\n👋 Thank you for using Shape Area Calculator!")
+                print("=" * 50)
+                break
+
+            elif choice == '1':
+                # Circle
+                print("\n📐 Circle Area Calculator")
+                radius = get_float_input("Enter radius: ")
+                area = calculator.circle(radius)
+                calculate_and_display("Circle", area)
+
+            elif choice == '2':
+                # Square
+                print("\n📐 Square Area Calculator")
+                side = get_float_input("Enter side length: ")
+                area = calculator.square(side)
+                calculate_and_display("Square", area)
+
+            elif choice == '3':
+                # Rectangle
+                print("\n📐 Rectangle Area Calculator")
+                length = get_float_input("Enter length: ")
+                width = get_float_input("Enter width: ")
+                area = calculator.rectangle(length, width)
+                calculate_and_display("Rectangle", area)
+
+            elif choice == '4':
+                # Triangle (base & height)
+                print("\n📐 Triangle Area Calculator (Base & Height)")
+                base = get_float_input("Enter base: ")
+                height = get_float_input("Enter height: ")
+                area = calculator.triangle(base, height)
+                calculate_and_display("Triangle", area)
+
+            elif choice == '5':
+                # Triangle (Heron's formula)
+                print("\n📐 Triangle Area Calculator (Three Sides)")
+                side_a = get_float_input("Enter side A: ")
+                side_b = get_float_input("Enter side B: ")
+                side_c = get_float_input("Enter side C: ")
+                area = calculator.triangle_heron(side_a, side_b, side_c)
+                calculate_and_display("Triangle", area)
+
+            elif choice == '6':
+                # Trapezoid
+                print("\n📐 Trapezoid Area Calculator")
+                base1 = get_float_input("Enter first base: ")
+                base2 = get_float_input("Enter second base: ")
+                height = get_float_input("Enter height: ")
+                area = calculator.trapezoid(base1, base2, height)
+                calculate_and_display("Trapezoid", area)
+
+            elif choice == '7':
+                # Parallelogram
+                print("\n📐 Parallelogram Area Calculator")
+                base = get_float_input("Enter base: ")
+                height = get_float_input("Enter height: ")
+                area = calculator.parallelogram(base, height)
+                calculate_and_display("Parallelogram", area)
+
+            elif choice == '8':
+                # Ellipse
+                print("\n📐 Ellipse Area Calculator")
+                major_axis = get_float_input("Enter semi-major axis: ")
+                minor_axis = get_float_input("Enter semi-minor axis: ")
+                area = calculator.ellipse(major_axis, minor_axis)
+                calculate_and_display("Ellipse", area)
+
+            elif choice == '9':
+                # Rhombus
+                print("\n📐 Rhombus Area Calculator")
+                diagonal1 = get_float_input("Enter first diagonal: ")
+                diagonal2 = get_float_input("Enter second diagonal: ")
+                area = calculator.rhombus(diagonal1, diagonal2)
+                calculate_and_display("Rhombus", area)
+
+            elif choice == '10':
+                # Regular Polygon
+                print("\n📐 Regular Polygon Area Calculator")
+                sides = get_int_input("Enter number of sides: ")
+                length = get_float_input("Enter side length: ")
+                area = calculator.regular_polygon(sides, length)
+                calculate_and_display("Regular Polygon", area)
+
+            else:
+                print("\n❌ Invalid choice! Please select a number from 0-10.")
+
+        except ValueError as e:
+            print(f"\n❌ Error: {e}")
+        except Exception as e:
+            print(f"\n❌ An unexpected error occurred: {e}")
+
+        input("\nPress Enter to continue...")
+
+
+if __name__ == "__main__":
+    main()
